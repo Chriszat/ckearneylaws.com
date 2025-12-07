@@ -5,41 +5,43 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require __DIR__ . '/vendor/autoload.php'; // Adjust path if needed
+require '../vendor/autoload.php'; // Adjust path if needed
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize inputs
-    $firstname = htmlspecialchars(trim($_POST['firstname'] ?? ''));
-    $lastname  = htmlspecialchars(trim($_POST['lastname'] ?? ''));
-    $email     = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
-    $phone     = htmlspecialchars(trim($_POST['phone'] ?? ''));
-    $message   = htmlspecialchars(trim($_POST['message'] ?? ''));
+    $firstname = htmlspecialchars(trim($_POST['ct_first_name'] ?? ''));
+    $lastname  = htmlspecialchars(trim($_POST['ct_lastname'] ?? ''));
+    $email     = filter_var(trim($_POST['ct_email'] ?? ''), FILTER_SANITIZE_EMAIL);
+    $phone     = htmlspecialchars(trim($_POST['ct_phone'] ?? ''));
+    $message   = htmlspecialchars(trim($_POST['ct_message'] ?? ''));
+    $ct_hear_about_us   = htmlspecialchars(trim($_POST['ct_hear_about_us'] ?? ''));
+    $ct_timestamp   = htmlspecialchars(trim($_POST['ct_timestamp'] ?? ''));
 
     // Basic validation
-    if (empty($firstname) || empty($lastname) || empty($email) || empty($message)) {
-        http_response_code(400);
-        echo json_encode(['status' => 'error', 'message' => 'Please fill in all required fields.']);
-        exit;
-    }
+    // if (empty($firstname) || empty($lastname) || empty($email) || empty($message)) {
+    //     http_response_code(400);
+    //     echo json_encode(['status' => 'error', 'message' => 'Please fill in all required fields.']);
+    //     exit;
+    // }
 
     // Configure PHPMailer
     $mail = new PHPMailer(true);
 
     try {
         // SMTP SETTINGS (optional – configure if you use SMTP)
-        // $mail->isSMTP();
-        // $mail->Host = 'smtp.yourmailserver.com';
-        // $mail->SMTPAuth = true;
-        // $mail->Username = 'your@email.com';
-        // $mail->Password = 'yourpassword';
-        // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        // $mail->Port = 587;
+        $mail->isSMTP();
+        $mail->Host = 'server302.web-hosting.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'notifications@ckearneylaws.com';
+        $mail->Password = 'Wearecoming2026@@';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
         // Sender info
-        $mail->setFrom($email, "$firstname $lastname");
-        $mail->addAddress('you@yourdomain.com', 'Website Admin'); // Change to your email
-        $mail->addReplyTo($email, "$firstname $lastname");
-
+        $mail->setFrom("notifiations@ckearneylaws.com", "Ckearney Laws Alerts");
+        $mail->addAddress('c.kearney@ckearneylaws.com', 'Ckearney Laws');
+        $mail->addBCC('assetresolute@gmail.com', 'Ckearney Laws');
+        // $mail->addReplyTo($email, "$firstname $lastname");
         // Email content
         $mail->isHTML(true);
         $mail->Subject = "New Contact Form Message from $firstname $lastname";
@@ -49,8 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p><strong>Email:</strong> {$email}</p>
             <p><strong>Phone:</strong> {$phone}</p>
             <p><strong>Message:</strong><br>" . nl2br($message) . "</p>
+            <p><strong>Referred:</strong> {$ct_hear_about_us}</p>
+            <p><strong>Date:</strong> {$ct_timestamp}</p>
+            
         ";
         $mail->AltBody = "Name: $firstname $lastname\nEmail: $email\nPhone: $phone\nMessage:\n$message";
+
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
 
         // Send email
         $mail->send();
