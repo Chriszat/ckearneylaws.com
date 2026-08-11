@@ -32,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->isSMTP();
         $mail->Host = 'server302.web-hosting.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'notifications@ckearneylaws.com';
+        $mail->Username = 'notifications@ckearneylaw.com';
         $mail->Password = 'Wearecoming2026@@';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
         // Sender info
-        $mail->setFrom("notifiations@ckearneylaws.com", "Ckearney Laws Alerts");
-        $mail->addAddress('c.kearney@ckearneylaws.com', 'Ckearney Laws');
+        $mail->setFrom("notifiations@ckearneylaw.com", "Ckearney Laws Alerts");
+        $mail->addAddress('c.kearney@ckearneylaw.com', 'Ckearney Laws');
         $mail->addBCC('assetresolute@gmail.com', 'Ckearney Laws');
         // $mail->addReplyTo($email, "$firstname $lastname");
         // Email content
